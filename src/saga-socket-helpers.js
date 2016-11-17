@@ -22,6 +22,15 @@ function createSocketChannel(socket, stompClient) {
         };
 
         // stompClient's subscribe method uses socketHandler as callback to emit received push messages
+        // client can subscribe to more than one destination
+        // 
+        //  {
+        //   var sub1 = client.subscribe("/topic/timers", onmessage);
+        //   var sub2 = client.subscribe("/topic/guessed_word", onmessage);
+        //  }
+        // subscription reference can be used to unsubscribe from endpoint
+        // subscription.unsubscribe();
+        //
         stompClient.connect({}, (frame) => {
             console.log('Connected callback: ' + frame);
             const subscription = stompClient.subscribe('/topic/timers', (message) => {
@@ -32,7 +41,7 @@ function createSocketChannel(socket, stompClient) {
         socket.onclose = function() {
             console.log('socket.onclose => close');
         };
-
+    
         const unsubscribe = () => {
             stompClient.disconnect();
             socket.close();
